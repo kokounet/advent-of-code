@@ -13,11 +13,13 @@ fn part2(elfs: &Vec<Vec<u32>>) -> u32 {
 
 fn main() -> Result<(), Error> {
     let content = fs::read_to_string("day01/input.txt")?;
-    let calories: Vec<_> = content.split("\n").map(|a| a.trim().to_string()).collect();
-    let elfs: Vec<Vec<u32>> = calories
-        .split(|s| s.is_empty())
-        .map(|split| split.into_iter().map(|s| s.parse().unwrap()).collect())
-        .collect();
+    let elfs: Vec<Vec<u32>> = content.split("\n").fold(vec![vec![]], |mut acc, curr| {
+        match curr.trim().parse() {
+            Ok(calories) => acc.last_mut().unwrap().push(calories),
+            Err(_) => acc.push(Vec::new()),
+        }
+        acc
+    });
     let max = part1(&elfs);
     let top3 = part2(&elfs);
     println!("{max}");
