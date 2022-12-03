@@ -31,8 +31,7 @@ fn part2(rounds: &[(&str, &str)]) -> u32 {
 fn main() -> Result<(), Error> {
     let content = fs::read_to_string("day02/input.txt")?;
     let rounds: Vec<(&str, &str)> = content
-        .split('\n')
-        .filter(|line| !line.is_empty())
+        .lines()
         .map(|line| {
             let frag: Vec<_> = line.split_whitespace().take(2).collect();
             (frag[0], frag[1])

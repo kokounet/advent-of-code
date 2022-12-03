@@ -13,7 +13,7 @@ fn part2(elfs: &[Vec<u32>]) -> u32 {
 
 fn main() -> Result<(), Error> {
     let content = fs::read_to_string("day01/input.txt")?;
-    let elfs: Vec<Vec<u32>> = content.split('\n').fold(vec![vec![]], |mut acc, curr| {
+    let elfs: Vec<Vec<u32>> = content.lines().fold(vec![vec![]], |mut acc, curr| {
         match curr.trim().parse() {
             Ok(calories) => acc.last_mut().unwrap().push(calories),
             Err(_) => acc.push(Vec::new()),
