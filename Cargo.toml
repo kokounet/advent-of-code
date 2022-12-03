@@ -1,9 +1,11 @@
 [workspace]
-members = [
-    "day01",
-    "day02",
-]
+members = ["day01", "day02", "day03"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[workspace.package]
+version = "0.1.0"
+authors = ["Chris Janaqi"]
+description = "Advent of Code 2022 solutions in rust"
+edition = "2021"
+
 [workspace.dependencies]
 anyhow = "*"
