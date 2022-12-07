@@ -20,8 +20,6 @@ def main():
                 cwd = ["/"]
             case ["$", "cd", dir]:
                 cwd.append(dir)
-            case ["$", cmd]:
-                pass
             case [ssize, name] if ssize not in ["$", "dir"]:
                 size = int(ssize)
                 available -= size
