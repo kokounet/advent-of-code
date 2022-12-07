@@ -22,9 +22,7 @@ fn parse<'a, T: Iterator<Item = Vec<&'a str>>>(lines: T) -> HashMap<String, u32>
             |(mut dirs, mut cwd), line| {
                 match line.as_slice() {
                     ["$", "cd", "/"] => cwd = vec!["root"],
-                    ["$", "cd", ".."] => {
-                        cwd.pop();
-                    }
+                    ["$", "cd", ".."] => cwd.pop().map_or((), |_| ()),
                     ["$", "cd", dir] => cwd.push(dir),
                     ["$", _] => {}
                     ["dir", _] => {}
