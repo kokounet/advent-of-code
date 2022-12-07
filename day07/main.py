@@ -9,7 +9,6 @@ def main():
     with Path("day07/input.txt").open() as file:
         lines = [l.strip().split() for l in file]
 
-    files = {}
     dirs = defaultdict(lambda: 0)
     cwd = ["/"]
     for line in lines:
@@ -23,7 +22,6 @@ def main():
             case [ssize, name] if ssize not in ["$", "dir"]:
                 size = int(ssize)
                 available -= size
-                files[tuple([*cwd, name])] = size
                 for i in range(len(cwd)):
                     dirs[tuple(cwd[: i + 1])] += size
 
