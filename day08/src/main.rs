@@ -14,7 +14,7 @@ fn main() -> Result<(), Error> {
     Ok(())
 }
 
-fn part1(grid: &Vec<Vec<u32>>, (w, h): (usize, usize)) -> u32 {
+fn part1(grid: &[Vec<u32>], (w, h): (usize, usize)) -> u32 {
     assert!(w > 2 && h > 2);
     let ext = (w * h - (w - 2) * (h - 2)) as u32;
     let visible = iproduct!(1..h - 1, 1..w - 1)
@@ -24,7 +24,7 @@ fn part1(grid: &Vec<Vec<u32>>, (w, h): (usize, usize)) -> u32 {
     ext + visible
 }
 
-fn is_visible(grid: &Vec<Vec<u32>>, (y, x): (usize, usize), (w, h): (usize, usize)) -> bool {
+fn is_visible(grid: &[Vec<u32>], (y, x): (usize, usize), (w, h): (usize, usize)) -> bool {
     let cmp = |i: usize, j: usize| grid[y][x] > grid[i][j];
     (0..y).all(|i| cmp(i,x))             // TOP
         || (y + 1..h).all(|i| cmp(i,x))  // BOTTOM
@@ -32,7 +32,7 @@ fn is_visible(grid: &Vec<Vec<u32>>, (y, x): (usize, usize), (w, h): (usize, usiz
         || (x + 1..w).all(|j| cmp(y, j)) // RIGHT
 }
 
-fn part2(grid: &Vec<Vec<u32>>, (w, h): (usize, usize)) -> u32 {
+fn part2(grid: &[Vec<u32>], (w, h): (usize, usize)) -> u32 {
     assert!(w > 2 && h > 2);
     iproduct!(1..h - 1, 1..w - 1)
         .map(|tree| score(grid, tree, (w, h)))
@@ -40,7 +40,7 @@ fn part2(grid: &Vec<Vec<u32>>, (w, h): (usize, usize)) -> u32 {
         .unwrap_or(0)
 }
 
-fn score(grid: &Vec<Vec<u32>>, (y, x): (usize, usize), (w, h): (usize, usize)) -> u32 {
+fn score(grid: &[Vec<u32>], (y, x): (usize, usize), (w, h): (usize, usize)) -> u32 {
     let cmp = |i: usize, j: usize| grid[y][x] > grid[i][j];
     let top = y - (0..y).rev().skip_while(|&i| cmp(i, x)).skip(1).count();
     let bot = h - (y + 1) - (y + 1..h).skip_while(|&i| cmp(i, x)).skip(1).count();
