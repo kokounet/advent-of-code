@@ -31,16 +31,12 @@ fn part1(positions: &[i32]) -> i32 {
 
 fn part2(positions: &[i32]) -> String {
     let mut screen = String::with_capacity(6 * 40);
-    for (cycle, &sprite) in positions.iter().enumerate().take(6 * 40) {
-        let cursor = cycle % 40;
-        if cursor == 0 && cycle > 0 {
-            screen.push('\n');
+    for line in positions.chunks(40).take(6) {
+        for (cursor, &sprite) in line.iter().enumerate() {
+            let on = (cursor as i32 - sprite).abs() <= 1;
+            screen.push(if on { '█' } else { ' ' });
         }
-        if (cursor as i32 - sprite).abs() <= 1 {
-            screen.push('█');
-        } else {
-            screen.push(' ');
-        }
+        screen.push('\n');
     }
     screen
 }
