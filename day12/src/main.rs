@@ -39,10 +39,10 @@ fn parse(content: &str) -> (Pos, Pos, Map) {
     let (start, end, grid) = content.lines().enumerate().fold(
         ((0, 0), (0, 0), vec![]),
         |(mut start, mut end, mut grid), (i, line)| {
-            if let Some(j) = line.find("S") {
+            if let Some(j) = line.find('S') {
                 start = (i, j);
             }
-            if let Some(j) = line.find("E") {
+            if let Some(j) = line.find('E') {
                 end = (i, j);
             }
             grid.push(line.chars().map(|c| heights[&c]).collect::<Vec<_>>());
@@ -68,7 +68,7 @@ impl Map {
 
     pub fn shortest_path(&self, from: &Pos, to: &Pos) -> Option<(Vec<Pos>, Cost)> {
         dijkstra(
-            &from,
+            from,
             |pos| {
                 let height = self.at(pos) + 1;
                 self.neighbors(pos)
