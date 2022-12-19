@@ -74,7 +74,7 @@ fn scan_y(
         .iter()
         .filter_map(|sphere| {
             sphere
-                .raycast_y(&y)
+                .raycast_y(y)
                 .and_then(|iv| intersection(&iv, &bounds))
         })
         .collect();
