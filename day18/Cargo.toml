@@ -7,4 +7,3 @@ edition.workspace = true
 
 [dependencies]
 anyhow = { workspace = true }
-block-mesh = "*"
