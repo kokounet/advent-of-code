@@ -60,8 +60,12 @@ fn part2(lines: &[&str]) -> u64 {
 }
 
 fn number_of_ways_to_beat(time: u64, best: u64) -> u64 {
-    (0..=time)
-        .map(|hold| hold * (time - hold))
-        .filter(|dist| *dist > best)
-        .count() as u64
+    let a = -1.0;
+    let b = time as f64;
+    let c = -(best as f64);
+    debug_assert!(b * b > 4.0 * a * c);
+    let delta = (b * b - 4.0 * a * c).sqrt();
+    let hold_min = (((-b + delta) / (2.0 * a)) + 1.0).floor() as u64;
+    let hold_max = ((-b - delta) / (2.0 * a) - 1.0).ceil() as u64;
+    hold_max - hold_min + 1
 }
