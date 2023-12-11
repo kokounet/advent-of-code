@@ -4,16 +4,16 @@ use std::fs;
 
 use anyhow::{anyhow, Error};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Bid {
     pub hand: Hand,
     pub bet: u32,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 struct Hand(pub Vec<Card>);
 
-#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum HandKind {
     HighCard,
     OnePair,
@@ -26,9 +26,9 @@ enum HandKind {
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 enum Card {
-    J,
     Num(u8),
     T,
+    J,
     Q,
     K,
     A,
@@ -36,25 +36,29 @@ enum Card {
 
 fn main() -> Result<(), Error> {
     let content = fs::read_to_string("day07/input.txt")?;
-    let mut bids = content
+    let bids = content
         .lines()
         .map(|line| line.try_into())
         .collect::<Result<Vec<Bid>, _>>()?;
-    bids.sort_by(|left, right| left.hand.cmp(&right.hand));
-    println!("{}", part1(&bids));
-    println!("{}", part2(&bids));
+    println!("{}", part1(bids.clone()));
+    println!("{}", part2(bids.clone()));
     Ok(())
 }
 
-fn part1(bids: &[Bid]) -> u32 {
+fn part1(mut bids: Vec<Bid>) -> u32 {
+    bids.sort_by(|a, b| a.hand.cmp(&b.hand));
     bids.into_iter()
         .enumerate()
         .map(|(rank, bid)| (rank as u32 + 1) * bid.bet)
         .sum()
 }
 
-fn part2(bids: &[Bid]) -> u32 {
-    0
+fn part2(mut bids: Vec<Bid>) -> u32 {
+    bids.sort_by(|a, b| a.hand.cmp2(&b.hand));
+    bids.into_iter()
+        .enumerate()
+        .map(|(rank, bid)| (rank as u32 + 1) * bid.bet)
+        .sum()
 }
 
 /// ORDERING
@@ -88,6 +92,54 @@ impl Hand {
             _ => unreachable!(),
         }
     }
+
+    fn top2(&self) -> Vec<u8> {
+        // same as top but filter out the jokers
+        let mut counter = BTreeMap::new();
+        for card in self.0.iter().filter(|card| !matches!(card, Card::J)) {
+            counter
+                .entry(*card)
+                .and_modify(|count| *count += 1)
+                .or_insert(1);
+        }
+        let mut top: Vec<_> = counter.into_values().collect();
+        top.sort();
+        top
+    }
+
+    fn kind2(&self) -> HandKind {
+        use HandKind::*;
+        let jokers = self
+            .0
+            .iter()
+            .filter(|&card| matches!(card, Card::J))
+            .count() as u8;
+        if jokers == 0 {
+            return self.kind();
+        }
+        let mut top = self.top2();
+        let first = top.pop().unwrap_or_default() + jokers;
+        let second = top.pop().unwrap_or_default();
+        match (first, second) {
+            (5, 0) => FiveOfAKind,
+            (4, 1) => FourOfAKind,
+            (3, 2) => FullHouse,
+            (3, 1) => ThreeOfAKind,
+            (2, 2) => TwoPairs,
+            (2, 1) => OnePair,
+            (1, _) => HighCard,
+            _ => unreachable!(),
+        }
+    }
+
+    fn cmp2(&self, other: &Self) -> Ordering {
+        self.kind2().cmp(&other.kind2()).then_with(|| {
+            self.0
+                .iter()
+                .map(Card2::from)
+                .cmp(other.0.iter().map(Card2::from))
+        })
+    }
 }
 
 impl Ord for Hand {
@@ -104,10 +156,27 @@ impl PartialOrd for Hand {
     }
 }
 
-impl Card {
-    pub fn all() -> impl Iterator<Item = Card> {
-        use Card::*;
-        (2..=9).map(|num| Num(num)).chain([T, Q, K, A])
+/// Card hack
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum Card2 {
+    J,
+    Num(u8),
+    T,
+    Q,
+    K,
+    A,
+}
+
+impl From<&Card> for Card2 {
+    fn from(value: &Card) -> Self {
+        match &value {
+            Card::J => Card2::J,
+            Card::Num(num) => Card2::Num(*num),
+            Card::T => Card2::T,
+            Card::Q => Card2::Q,
+            Card::K => Card2::K,
+            Card::A => Card2::A,
+        }
     }
 }
 
