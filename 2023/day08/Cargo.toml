@@ -9,3 +9,5 @@ edition.workspace = true
 
 [dependencies]
 anyhow = { workspace = true }
+regex = "*"
+num = "*"

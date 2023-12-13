@@ -1,5 +1,5 @@
 [package]
-name = "day03"
+name = "day13"
 version.workspace = true
 authors.workspace = true
 description.workspace = true
@@ -9,4 +9,3 @@ edition.workspace = true
 
 [dependencies]
 anyhow = { workspace = true }
-regex = "*"
