@@ -9,4 +9,4 @@ edition.workspace = true
 
 [dependencies]
 anyhow = { workspace = true }
-ndarray = "*"
+grid = "*"
