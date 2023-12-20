@@ -81,7 +81,6 @@ impl TryFrom<&str> for Almanac {
         }
         mappings.sort_by_key(|mapping| mapping.source.start);
         maps.push(mappings);
-        mappings = Vec::new();
         Ok(Almanac { seeds, maps })
     }
 }
