@@ -23,20 +23,21 @@ fn part1(program: &str) -> i32 {
 
 fn part2(program: &str) -> i32 {
     let re = Regex::new(r"mul\((\d+),(\d+)\)|(don't)\(\)|(do)\(\)").unwrap();
-    let mut enabled = true; // program starts enabled
-    re.captures_iter(program).fold(0, |sum, caps| {
-        if caps.get(3).is_some() {
-            enabled = false;
-            sum
-        } else if caps.get(4).is_some() {
-            enabled = true;
-            sum
-        } else if enabled {
-            let left = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
-            let right = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
-            sum + left * right
-        } else {
-            sum
-        }
-    })
+
+    re.captures_iter(program)
+        // program starts enabled
+        .fold((0, true), |(mut sum, enabled), caps| {
+            if caps.get(3).is_some() {
+                return (sum, false);
+            } else if caps.get(4).is_some() {
+                return (sum, true);
+            }
+            if enabled {
+                let left = caps.get(1).unwrap().as_str().parse::<i32>().unwrap();
+                let right = caps.get(2).unwrap().as_str().parse::<i32>().unwrap();
+                sum += left * right;
+            }
+            (sum, enabled)
+        })
+        .0
 }
