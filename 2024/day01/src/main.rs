@@ -33,16 +33,19 @@ fn part2(left: &[i32], right: &[i32]) -> i32 {
     let right = count(right);
     left.into_iter()
         .map(|(e, l_count)| {
-            let r_count = *right.get(&e).unwrap_or(&0);
+            let r_count = *right.get(e).unwrap_or(&0);
             e * l_count * r_count
         })
         .sum()
 }
 
-fn count<'a>(iter: impl IntoIterator<Item = &'a i32>) -> BTreeMap<i32, i32> {
+fn count<T>(iter: impl IntoIterator<Item = T>) -> BTreeMap<T, i32>
+where
+    T: Ord,
+{
     let mut res = BTreeMap::new();
     for e in iter.into_iter() {
-        *res.entry(*e).or_default() += 1;
+        *res.entry(e).or_default() += 1;
     }
     res
 }
