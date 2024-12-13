@@ -25,3 +25,5 @@ edition = "2021"
 
 [workspace.dependencies]
 anyhow = "*"
+itertools = "*"
+glam = "*"
