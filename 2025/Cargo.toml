@@ -1,0 +1,14 @@
+[workspace]
+resolver = "3"
+members = ["day01"]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Chris Janaqi"]
+description = "Advent of Code 2025 solutions in rust"
+edition = "2021"
+
+[workspace.dependencies]
+anyhow = "*"
+itertools = "*"
+glam = "*"
