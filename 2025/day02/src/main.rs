@@ -1,4 +1,4 @@
-use std::{fs, ops::RangeInclusive};
+use std::{fmt::Write, fs, ops::RangeInclusive, time::Instant};
 
 use anyhow::{anyhow, Result};
 
@@ -15,39 +15,50 @@ fn main() -> Result<()> {
             Ok(low..=high)
         })
         .collect::<Result<Vec<_>>>()?;
-    println!("{}", part1(&ranges));
-    println!("{}", part2(&ranges));
+    let start = Instant::now();
+    let p1 = part1(&ranges);
+    let end = Instant::now();
+    println!("{} ({:?})", p1, end.duration_since(start));
+
+    let start = Instant::now();
+    let p2 = part2(&ranges);
+    let end = Instant::now();
+    println!("{} ({:?})", p2, end.duration_since(start));
     Ok(())
 }
 
 fn part1(ranges: &[RangeInclusive<u64>]) -> u64 {
-    ranges
-        .iter()
-        .flat_map(|range| {
-            range.clone().filter_map(|id| {
-                let digits = id.to_string();
-                let len = digits.len();
-                if len & 0x1 == 1 {
-                    return None;
-                } // len is odd, can't be invalid
-                let mid = digits.len() / 2;
-                (digits[0..mid] == digits[mid..]).then_some(id)
-            })
-        })
-        .sum()
+    let mut buf = String::new();
+    let mut sum = 0;
+    for range in ranges {
+        for id in range.clone() {
+            buf.clear();
+            write!(&mut buf, "{}", id).expect("fail write id into string");
+            let digits = buf.as_str();
+            let len = digits.len();
+            if len & 0x1 == 1 {
+                continue;
+            } // len is odd, can't be invalid
+            let mid = digits.len() / 2;
+            sum += id * (digits[0..mid] == digits[mid..]) as u64;
+        }
+    }
+    sum
 }
 
 fn part2(ranges: &[RangeInclusive<u64>]) -> u64 {
-    ranges
-        .iter()
-        .flat_map(|range| {
-            range.clone().filter_map(|id| {
-                let digits = id.to_string();
-                let len = digits.len();
-                (1..=len / 2).any(|l| check(l, &digits)).then_some(id)
-            })
-        })
-        .sum()
+    let mut buf = String::new();
+    let mut sum = 0;
+    for range in ranges {
+        for id in range.clone() {
+            buf.clear();
+            write!(&mut buf, "{}", id).expect("fail write id into string");
+            let digits = buf.as_str();
+            let len = digits.len();
+            sum += id * (1..=len / 2).any(|l| check(l, &digits)) as u64;
+        }
+    }
+    sum
 }
 
 fn check(k: usize, s: &str) -> bool {
