@@ -43,8 +43,8 @@ fn check(k: usize, s: &str) -> bool {
         // this length of prefix can not be a match
         return false;
     }
-    // len * k = id.len()
+    // n * k = s.len()
     let n = s.len() / k;
     let prefix = &s[0..k];
-    prefix.repeat(n) == s
+    (1..n).all(|i| &s[k*i..k*(i+1)] == prefix)
 }
