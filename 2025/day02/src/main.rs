@@ -1,6 +1,7 @@
-use std::{fmt::Write, fs, ops::RangeInclusive, time::Instant};
+use std::{fmt::Write, fs, ops::RangeInclusive};
 
 use anyhow::{anyhow, Result};
+use common::time;
 
 fn main() -> Result<()> {
     let content = fs::read_to_string("day02/input.txt")?;
@@ -15,15 +16,8 @@ fn main() -> Result<()> {
             Ok(low..=high)
         })
         .collect::<Result<Vec<_>>>()?;
-    let start = Instant::now();
-    let p1 = part1(&ranges);
-    let end = Instant::now();
-    println!("{} ({:?})", p1, end.duration_since(start));
-
-    let start = Instant::now();
-    let p2 = part2(&ranges);
-    let end = Instant::now();
-    println!("{} ({:?})", p2, end.duration_since(start));
+    println!("{}", time!(part1(&ranges)));
+    println!("{}", time!(part2(&ranges)));
     Ok(())
 }
 

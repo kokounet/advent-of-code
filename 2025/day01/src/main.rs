@@ -1,6 +1,7 @@
 use std::fs;
 
 use anyhow::{anyhow, Result};
+use common::time;
 
 fn main() -> Result<()> {
     let content = fs::read_to_string("day01/input.txt")?;
@@ -16,8 +17,8 @@ fn main() -> Result<()> {
         let num = line[1..].parse::<i32>()?;
         Ok(sign*num)
     }).collect::<Result<Vec<_>>>()?;
-    println!("{}", part1(&numbers));
-    println!("{}", part2(&numbers));
+    println!("{}", time!(part1(&numbers)));
+    println!("{}", time!(part2(&numbers)));
     Ok(())
 }
 

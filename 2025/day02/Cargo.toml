@@ -8,3 +8,4 @@ edition.workspace = true
 [dependencies]
 anyhow = { workspace = true }
 regex = { workspace = true }
+common = { path = "../common" }
