@@ -10,7 +10,7 @@ fn main() -> Result<()> {
         .map(|range| {
             let (low, high) = range
                 .split_once("-")
-                .ok_or(anyhow!("unexpected range: {}", range))?;
+                .ok_or(anyhow!("unexpected range: {range}"))?;
             let low = low.parse::<u64>()?;
             let high = high.parse::<u64>()?;
             Ok(low..=high)
@@ -27,7 +27,7 @@ fn part1(ranges: &[RangeInclusive<u64>]) -> u64 {
     for range in ranges {
         for id in range.clone() {
             buf.clear();
-            write!(&mut buf, "{}", id).expect("fail write id into string");
+            write!(&mut buf, "{id}").expect("fail write id into string");
             let digits = buf.as_str();
             let len = digits.len();
             if len & 0x1 == 1 {
@@ -46,10 +46,10 @@ fn part2(ranges: &[RangeInclusive<u64>]) -> u64 {
     for range in ranges {
         for id in range.clone() {
             buf.clear();
-            write!(&mut buf, "{}", id).expect("fail write id into string");
+            write!(&mut buf, "{id}").expect("fail write id into string");
             let digits = buf.as_str();
             let len = digits.len();
-            sum += id * (1..=len / 2).any(|l| check(l, &digits)) as u64;
+            sum += id * (1..=len / 2).any(|l| check(l, digits)) as u64;
         }
     }
     sum

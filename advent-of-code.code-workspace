@@ -5,5 +5,8 @@
         { "name": "2023", "path": "./2023" },
         { "name": "2024", "path": "./2024" },
         { "name": "2025", "path": "./2025" },
-    ]
+    ],
+    "settings": {
+        "editor.formatOnSave": true
+    }
 }
