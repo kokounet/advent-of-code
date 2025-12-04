@@ -1,4 +1,4 @@
-use std::{collections::BTreeSet, fs, mem::needs_drop};
+use std::{collections::BTreeSet, fs};
 
 use anyhow::Result;
 use common::time;
@@ -50,7 +50,7 @@ fn part2(mut grid: Box<[Box<[bool]>]>) -> i32 {
             grid[l as usize][c as usize] = false;
         }
         num as i32
-    };
+    }
     std::iter::repeat_with(move || step(&mut grid))
         .take_while(|&num| num != 0)
         .sum()

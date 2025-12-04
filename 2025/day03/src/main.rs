@@ -36,8 +36,7 @@ fn part1(banks: &[Vec<u64>]) -> u64 {
                 .iter()
                 .argmax()
                 .expect("bank should not be empty");
-            let joltage = 10 * first + last;
-            joltage
+            10 * first + last
         })
         .sum()
 }
@@ -55,7 +54,7 @@ fn part2(banks: &[Vec<u64>], num: usize) -> u64 {
                     .argmax()
                     .expect("bank should not be empty");
                 bank = &bank[i + 1..];
-                res = res * 10 + joltage;
+                res = 10 * res + joltage;
             }
             res
         })
