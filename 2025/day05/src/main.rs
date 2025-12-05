@@ -33,11 +33,12 @@ fn part1(ranges: &[(i64, i64)], ids: &[i64]) -> i64 {
 
 fn part2(mut ranges: Vec<(i64, i64)>) -> i64 {
     assert!(!ranges.is_empty());
-    // inverse sorting to use the more efficient `pop` instead of `remove(0)`
-    ranges.sort_by_key(|&(a, _)| -a);
+    // sort by lower bound
+    ranges.sort_unstable_by(|(a, _), (b, _)| a.cmp(b));
+    let mut it = ranges.into_iter();
     let mut merged = Vec::new();
-    let mut prev = ranges.pop().expect("ranges can't be empty");
-    while let Some(curr) = ranges.pop() {
+    let mut prev = it.next().expect("ranges can't be empty");
+    for curr in it {
         if curr.0 <= prev.1 {
             // grow current interval
             prev.1 = prev.1.max(curr.1);
