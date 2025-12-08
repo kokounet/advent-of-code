@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = [ "common","day01", "day02", "day03", "day04", "day05", "day06", "day07"]
+members = [ "common","day01", "day02", "day03", "day04", "day05", "day06", "day07", "day08"]
 
 [workspace.package]
 version = "0.1.0"
