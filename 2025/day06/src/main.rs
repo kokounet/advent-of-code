@@ -33,7 +33,38 @@ fn parse1(content: &str) -> Result<Vec<(Vec<i64>, Op)>> {
 }
 
 fn parse2(content: &str) -> Result<Vec<(Vec<i64>, Op)>> {
-    Ok(vec![])
+    let lines: Vec<Vec<_>> = content.lines().map(|l| l.chars().collect()).collect();
+    assert!(!lines.is_empty());
+    let cols = lines[0].len();
+    let mut iters: Vec<_> = lines.into_iter().map(|line| line.into_iter()).collect();
+    let mut transpose: Vec<Vec<_>> = (0..cols)
+        .map(|_| iters.iter_mut().map(|n| n.next().unwrap()).collect())
+        .collect();
+    // read from right to left (technically not necessary as operators are commutative here)
+    transpose.reverse();
+    let mut res = vec![];
+    let mut acc = vec![];
+    let mut op = None;
+    for e in transpose {
+        let len = e.len();
+        op = op.or_else(|| Op::try_from(&e[len - 1]).ok());
+        match e[..len - 1]
+            .iter()
+            .collect::<String>()
+            .trim()
+            .parse::<i64>()
+        {
+            Ok(num) => acc.push(num),
+            Err(_) => {
+                assert!(op.is_some());
+                res.push((acc.clone(), op.unwrap()));
+                acc.clear();
+                op = None;
+            }
+        }
+    }
+    res.push((acc, op.unwrap()));
+    Ok(res)
 }
 
 fn solve(problems: &[(Vec<i64>, Op)]) -> i64 {
@@ -53,6 +84,18 @@ impl TryFrom<&str> for Op {
         match value {
             "*" => Ok(Self::Mul),
             "+" => Ok(Self::Add),
+            _ => Err(anyhow!("Wrong operator: {value}")),
+        }
+    }
+}
+
+impl TryFrom<&char> for Op {
+    type Error = Error;
+
+    fn try_from(value: &char) -> std::result::Result<Self, Self::Error> {
+        match value {
+            '*' => Ok(Self::Mul),
+            '+' => Ok(Self::Add),
             _ => Err(anyhow!("Wrong operator: {value}")),
         }
     }
