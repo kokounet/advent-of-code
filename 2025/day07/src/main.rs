@@ -77,6 +77,5 @@ fn part2(start: i64, manifolds: &[HashSet<i64>]) -> i64 {
     }
 
     let mut memo = HashMap::new();
-    let res = solve((start, 0), manifolds, &mut memo);
-    res
+    solve((start, 0), manifolds, &mut memo)
 }

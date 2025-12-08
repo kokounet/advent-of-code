@@ -57,7 +57,7 @@ fn part2(ranges: &[RangeInclusive<u64>]) -> u64 {
 
 fn check(k: usize, s: &str) -> bool {
     assert!(k < s.len());
-    if s.len() % k != 0 {
+    if !s.len().is_multiple_of(k) {
         // this length of prefix can not be a match
         return false;
     }
